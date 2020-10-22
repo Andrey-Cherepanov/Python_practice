@@ -42,7 +42,15 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    # PUT YOUR CODE HERE
+    alpha='abcdefghijklmnopqrstuvwxyz'
+    for i in ciphertext :
+        if i.lower() in alpha:
+            if i.islower():
+                plaintext+=alpha[alpha.find(i)-shift]
+            else:
+                plaintext+=alpha[alpha.find(i.lower())-shift].upper()
+        else:
+            plaintext+=i
     return plaintext
 
 
