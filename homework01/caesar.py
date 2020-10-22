@@ -15,7 +15,16 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+    alpha='abcdefghijklmnopqrstuvwxyz'
+    for i in plaintext :
+        if i.lower() in alpha:
+            if i.islower():
+                ciphertext+=alpha[(alpha.find(i)+shift) % len(alpha)]
+            else:
+                ciphertext+=alpha[(alpha.find(i.lower())+shift) % len(alpha)].upper()
+        else:
+            ciphertext+=i
+
     return ciphertext
 
 
