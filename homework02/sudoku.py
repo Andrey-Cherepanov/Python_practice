@@ -28,8 +28,13 @@ def group(values: List[str], n: int) -> List[List[str]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    pass
-
+    group_arr=[]
+    groups_count=len(values)//n
+    for i in range(groups_count):
+        group_arr.append([])
+        for j in range(n):
+            group_arr[i].append(values[i*n+j])
+    return group_arr
 
 def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     """ Возвращает все значения для номера строки, указанной в pos
@@ -41,7 +46,7 @@ def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    pass
+    return grid[pos[0]]
 
 
 def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -54,7 +59,8 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    pass
+    col = [row[pos[1]] for row in grid]
+    return col
 
 
 def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -68,8 +74,14 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    pass
-
+    rows=[]
+    block=[]
+    for  i in range(pos[0]//3*3,pos[0]//3*3+3):
+        rows.append(get_row(grid,(i,0)))
+    for j in range(pos[1]//3*3,pos[1]//3*3+3):
+        block.append(get_col(rows,(0,j)))
+    block=[block[i][j] for j in range(3) for i in range(3)]
+    return block
 
 def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
     """ Найти первую свободную позицию в пазле
@@ -81,7 +93,13 @@ def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pass
+    pos=()
+    for i,row in enumerate(grid):
+        for j,this in enumerate(row):
+            if this == '.':
+                pos=(i,j)
+                break
+    return pos
 
 
 def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str]:
@@ -95,7 +113,9 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     >>> values == {'2', '5', '9'}
     True
     """
-    pass
+    possible_values={'1','2','3','4','5','6','7','8','9'}
+    set_values=set(get_col(grid,pos) + get_row(grid,pos) + get_block(grid,pos)) - {'.'}
+    return possible_values-set_values
 
 
 def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
