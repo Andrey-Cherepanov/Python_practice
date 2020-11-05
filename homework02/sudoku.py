@@ -171,6 +171,15 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
+    side = 3
+    while side**2 < N:
+        side+=3
+    grid = [['*' for i in range(side)] for j in range(side)]
+    print(grid)
+    for i in grid:
+        for j in grid[i]:
+            pass
+    return grid
     pass
 
 
@@ -183,3 +192,4 @@ if __name__ == '__main__':
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+    print(generate_sudoku(int(input("generate_sudoku:\n"))))
