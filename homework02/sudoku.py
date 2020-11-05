@@ -1,4 +1,5 @@
 from typing import Tuple, List, Set, Optional
+import random as rnd
 
 
 def read_sudoku(filename: str) -> List[List[str]]:
@@ -146,8 +147,24 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    pass
-
+    isRight=True
+    for i in range(9):
+        for j in range(9):
+            pos=(i,j)
+            try:
+                if sum(int(t) for t in get_col(solution, pos))!=45 :
+                    isRight=False
+                    break
+                if sum(int(t) for t in get_row(solution, pos))!=45 :
+                    isRight=False
+                    break
+                if sum(int(t) for t in get_block(solution, pos))!=45 :
+                    isRight=False
+                    break
+            except ValueError:
+                isRight=False
+                break
+    return isRight
 
 def generate_sudoku(N: int) -> List[List[str]]:
     """ Генерация судоку заполненного на N элементов
@@ -171,14 +188,8 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
-    side = 3
-    while side**2 < N:
-        side+=3
-    grid = [['*' for i in range(side)] for j in range(side)]
-    print(grid)
-    for i in grid:
-        for j in grid[i]:
-            pass
+    grid = [['.']*9]*9
+
     return grid
     pass
 
@@ -192,4 +203,3 @@ if __name__ == '__main__':
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
-    print(generate_sudoku(int(input("generate_sudoku:\n"))))
