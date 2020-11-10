@@ -1,6 +1,5 @@
 from typing import Tuple, List, Set, Optional
-import random as rnd
-
+import random
 
 def read_sudoku(filename: str) -> List[List[str]]:
     """ Прочитать Судоку из указанного файла """
@@ -143,7 +142,7 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
                 return grid
             else:
                 grid[pos[0]][pos[1]]='.'
-    return False
+    return []
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
@@ -188,10 +187,23 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
-    grid = [['.']*9]*9
+    if N>81: N=81
+    grid = [['.']*9 for j in range(9)]
+    grid=solve(grid)
+    #while not check_solution(grid):
+    #    pos=find_empty_positions(grid)
+    #    posible_values=find_possible_values(grid,pos)
+    #    if not posible_values:
+    #        grid = [['.']*9 for j in range(9)]
+    #        continue
+    #    grid[pos[0]][pos[1]]=random.choice(list(posible_values))
+    #old=grid
+    empty_positions=random.sample(range(81),81-N)
+    for i in empty_positions:
+        grid[i%9][i//9]='.'
+
 
     return grid
-    pass
 
 
 if __name__ == '__main__':
