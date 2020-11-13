@@ -189,15 +189,9 @@ def generate_sudoku(N: int) -> List[List[str]]:
     """
     if N>81: N=81
     grid = [['.']*9 for j in range(9)]
+    rndpos=random.randint(0,81)
+    grid[rndpos%9][rndpos//9]=str(random.choice(range(1,10)))
     grid=solve(grid)
-    #while not check_solution(grid):
-    #    pos=find_empty_positions(grid)
-    #    posible_values=find_possible_values(grid,pos)
-    #    if not posible_values:
-    #        grid = [['.']*9 for j in range(9)]
-    #        continue
-    #    grid[pos[0]][pos[1]]=random.choice(list(posible_values))
-    #old=grid
     empty_positions=random.sample(range(81),81-N)
     for i in empty_positions:
         grid[i%9][i//9]='.'
