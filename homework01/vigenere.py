@@ -1,15 +1,6 @@
 def encrypt_vigenere(plaintext: str, keyword: str) -> str:
-    """
-    Encrypts plaintext using a Vigenere cipher.
 
-    >>> encrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> encrypt_vigenere("python", "a")
-    'python'
-    >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
-    'LXFOPVEFRNHR'
-    """
-    alpha = 'abcdefghijklmnopqrstuvwxyz'
+    alpha = 'абвгдеёжзийклмнопрстуфхчшщьыъэюя'
     ciphertext = ""
     lentext=len(plaintext)
     lenkey=len(keyword)
@@ -25,18 +16,9 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
-    """
-    Decrypts a ciphertext using a Vigenere cipher.
 
-    >>> decrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> decrypt_vigenere("python", "a")
-    'python'
-    >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
-    'ATTACKATDAWN'
-    """
     plaintext = ""
-    alpha = 'abcdefghijklmnopqrstuvwxyz'
+    alpha = 'абвгдеёжзийклмнопрстуфхчшщьыъэюя'
     lentext=len(ciphertext)
     lenkey=len(keyword)
     for i in range(lentext):
@@ -48,3 +30,9 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         else:
             plaintext+=ciphertext[i]
     return plaintext
+
+if __name__ == "__main__":
+    plaintext=input("Введите текст:\n")
+    keyword=input("Введите ключ:\n")
+    cyphertext=encrypt_vigenere(plaintext,keyword)
+    print(f"Ваш зашифрованный текст: {cyphertext}")
