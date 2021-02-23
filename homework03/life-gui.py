@@ -49,18 +49,35 @@ class GUI(UI):
         pygame.display.set_caption('Game of Life')
         self.screen.fill(pygame.Color('white'))
         running = True
+        paused = False
         while running:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     running = False
-
-            # Отрисовка списка клеток
-            # Выполнение одного шага игры (обновление состояния ячеек)
-            self.draw_grid()
-            self.draw_lines()
-            self.life.step()
-            pygame.display.flip()
-            clock.tick(self.speed)
+            # Реализация паузы по нажатии на пробел
+                if event.type == KEYDOWN:
+                    if event.key == K_SPACE:
+                        paused = not paused
+                        self.draw_grid()
+                        self.draw_lines()
+                        pygame.display.flip()
+            # Возможность изменить состояние клетки во время игры
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button in [1,3]:
+                        x,y=pygame.mouse.get_pos()
+                        cell_pos=(x//self.cell_size, y//self.cell_size)
+                        self.life.curr_generation[cell_pos[1]][cell_pos[0]] = abs(self.life.curr_generation[cell_pos[1]][cell_pos[0]] - 1)
+                        self.draw_grid()
+                        self.draw_lines()
+                        pygame.display.flip()
+            if not paused:
+                # Отрисовка списка клеток
+                # Выполнение одного шага игры (обновление состояния ячеек)
+                self.draw_grid()
+                self.draw_lines()
+                self.life.step()
+                pygame.display.flip()
+                clock.tick(self.speed)
         pygame.quit()
 if __name__ == "__main__":
     cols=int(input('cols\n'))

@@ -162,10 +162,12 @@ class GameOfLife:
         game_from_file.curr_generation=grid
         return game_from_file
 
-    def save(name: pathlib.Path) -> None:
+    def save(self, filename: pathlib.Path) -> None:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        file=open(name,'w')
+        file=open(filename,'w')
         for i in self.curr_generation:
-            file.write(self.curr_generation[i]+'\n')
+            for c in i:
+                file.write(str(c))
+            file.write('\n')
