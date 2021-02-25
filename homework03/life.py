@@ -142,7 +142,7 @@ class GameOfLife:
         Изменилось ли состояние клеток с предыдущего шага.
         """
         is_changing=False
-        for i in self.rows:
+        for i in range(self.rows):
             if self.prev_generation[i]!=self.curr_generation[i]:
                 is_changing=True
         return is_changing

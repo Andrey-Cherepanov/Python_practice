@@ -77,8 +77,12 @@ class GUI(UI):
                 self.draw_lines()
                 self.life.step()
                 pygame.display.flip()
+            #    if self.life.is_max_generations_exceeded or not self.life.is_changing:
+            #        break
                 clock.tick(self.speed)
         pygame.quit()
+
+
 if __name__ == "__main__":
     cols=int(input('cols\n'))
     rows=int(input('rows\n'))
