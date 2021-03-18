@@ -1,4 +1,5 @@
 import curses
+import argparse
 
 from life import GameOfLife
 from ui import UI
@@ -33,12 +34,15 @@ class Console(UI):
             time.sleep(0.5)
         curses.endwin()
 if __name__ == "__main__":
-    cols=int(input('cols\n'))
-    rows=int(input('rows\n'))
-    max_gens=int(input('maximum generations or \'0\' for infinity\n'))
-    if max_gens == 0:
-        life=GameOfLife(size=(rows,cols))
+    parser = argparse.ArgumentParser(description = 'Реализация игры в жизнь в консольном интерфейсе.')
+    parser.add_argument("--cols", default = 20, type = int, help = "Количество столбцов на поле")
+    parser.add_argument("--rows", default = 20, type = int, help = "Количество строчек на поле")
+    parser.add_argument("--max_gens", type = int, help = "Максимальное количество поколений в игре")
+
+    args = parser.parse_args()
+    if args.max_gens:
+        life = GameOfLife(size=(args.rows, args.cols), max_generations=args.max_gens)
     else:
-        life=GameOfLife(size=(rows,cols), max_generations=max_gens)
+        life = GameOfLife(size=(args.rows, args.cols))
     console=Console(life=life)
     console.run()

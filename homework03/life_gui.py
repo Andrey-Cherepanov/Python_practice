@@ -1,8 +1,11 @@
 import pygame
 from pygame.locals import *
+import argparse
+from typing import List, Optional, Tuple
 
 from life import GameOfLife
 from ui import UI
+
 
 
 class GUI(UI):
@@ -84,14 +87,27 @@ class GUI(UI):
 
 
 if __name__ == "__main__":
-    cols=int(input('cols\n'))
-    rows=int(input('rows\n'))
-    max_gens=int(input('maximum generations or \'0\' for infinity\n'))
-    if max_gens == 0:
-        life=GameOfLife(size=(rows,cols))
+    #cols=int(input('cols\n'))
+    #rows=int(input('rows\n'))
+    #max_gens=int(input('maximum generations or \'0\' for infinity\n'))
+    #if max_gens == 0:
+    #    life=GameOfLife(size=(rows,cols))
+    #else:
+    #    life=GameOfLife(size=(rows,cols), max_generations=max_gens)
+    #cell_size=int(input('cell_size\n'))
+    #speed=int(input('speed\n'))
+
+    parser = argparse.ArgumentParser(description = 'Реализация игры в жизнь в графическом интерфейсе.\n ПРОБЕЛ - пауза \n ЛКМ/ПКМ - изменить состояние клетки')
+    parser.add_argument("--cols", default = 20, type = int, help = "Количество столбцов на поле")
+    parser.add_argument("--rows", default = 20, type = int, help = "Количество строчек на поле")
+    parser.add_argument("--cell_size", default = 10, type = int, help = "Размер стороны клетки")
+    parser.add_argument("--speed", default = 10, type = int, help = "Скорость протекания игры")
+    parser.add_argument("--max_gens", type = int, help = "Максимальное количество поколений в игре")
+
+    args = parser.parse_args()
+    if args.max_gens:
+        life = GameOfLife(size=(args.rows, args.cols), max_generations=args.max_gens)
     else:
-        life=GameOfLife(size=(rows,cols), max_generations=max_gens)
-    cell_size=int(input('cell_size\n'))
-    speed=int(input('speed\n'))
-    gui=GUI(life=life,cell_size=cell_size,speed=speed)
+        life = GameOfLife(size=(args.rows, args.cols))
+    gui=GUI(life=life,cell_size=args.cell_size,speed=args.speed)
     gui.run()
