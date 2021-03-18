@@ -117,24 +117,18 @@ class GameOfLife:
         out : Cells
             Список соседних клеток.
         """
-        x,y=cell
-        cells=[]
-        if y-1 >= 0:
-            cells.append((x,y-1))
-            if x+1<self.cell_width:
-                cells.append((x+1,y-1))
-        if x+1<self.cell_width:
-            cells.append((x+1,y))
-            if y+1<self.cell_height:
-                cells.append((x+1,y+1))
-        if y+1<self.cell_height:
-            cells.append((x,y+1))
-            if x-1>=0:
-                cells.append((x-1,y+1))
-        if x-1>=0:
-            cells.append((x-1,y))
-            if y-1>=0:
-                cells.append((x-1,y-1))
+        cells = []
+        cell_neighbours = [[-1, -1], [1, 1], [0, 1], [1, 0], [-1, 1], [1, -1], [-1, 0], [0, -1]]
+        for c in cell_neighbours:
+            c[0] += cell[0]
+            c[1] += cell[1]
+        for c in cell_neighbours:
+            i, j = c
+            try:
+                if i >= 0 and j >= 0:
+                    cells.append(self.grid[i][j])
+            except IndexError:
+                pass
         return cells
 
     def get_next_generation(self) -> Grid:
@@ -146,11 +140,11 @@ class GameOfLife:
         out : Grid
             Новое поколение клеток.
         """
-        newgrid=[[0]*self.cell_width for i in range(self.cell_height)]
+        newgrid=self.create_grid(False)
         for i,line in enumerate(self.grid):
             for j,this in enumerate(line):
-                cell=(j,i)
-                neighbours_count=sum([self.grid[c[1]][c[0]] for c in self.get_neighbours(cell)])
+                cell=(i,j)
+                neighbours_count=sum(self.get_neighbours(cell))
                 if self.grid[i][j] == 1:
                     if neighbours_count in [2,3]:
                         newgrid[i][j]=1
