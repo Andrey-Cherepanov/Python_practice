@@ -23,7 +23,7 @@ class Console(UI):
             screen.addstr(y+1, 1, newline)
 
     def run(self) -> None:
-        while self.life.is_changing and not self.life.is_max_generations_exceeded:
+        while self.life.is_changing and self.life.is_max_generations_exceed:
             screen = curses.initscr()
             screen.clear()
             self.draw_borders(screen)
