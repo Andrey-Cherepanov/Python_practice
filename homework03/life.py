@@ -26,7 +26,7 @@ class GameOfLife:
         # Максимальное число поколений
         self.max_generations = max_generations
         # Текущее число поколений
-        self.generations = 1
+        self.n_generation = 1
 
     def create_grid(self, randomize: bool=False) -> Grid:
         """
@@ -72,24 +72,18 @@ class GameOfLife:
         out : Cells
             Список соседних клеток.
         """
-        x,y=cell
-        cells=[]
-        if y-1 >= 0:
-            cells.append((x,y-1))
-            if x+1<self.cols:
-                cells.append((x+1,y-1))
-        if x+1<self.cols:
-            cells.append((x+1,y))
-            if y+1<self.rows:
-                cells.append((x+1,y+1))
-        if y+1<self.rows:
-            cells.append((x,y+1))
-            if x-1>=0:
-                cells.append((x-1,y+1))
-        if x-1>=0:
-            cells.append((x-1,y))
-            if y-1>=0:
-                cells.append((x-1,y-1))
+        cells = []
+        cell_neighbours = [[-1, -1], [1, 1], [0, 1], [1, 0], [-1, 1], [1, -1], [-1, 0], [0, -1]]
+        for c in cell_neighbours:
+            c[0] += cell[0]
+            c[1] += cell[1]
+        for c in cell_neighbours:
+            i, j = c
+            try:
+                if i >= 0 and j >= 0:
+                    cells.append(self.curr_generation[i][j])
+            except IndexError:
+                pass
         return cells
 
     def get_next_generation(self) -> Grid:
@@ -101,39 +95,34 @@ class GameOfLife:
         out : Grid
             Новое поколение клеток.
         """
-        newgrid=[[0]*self.cols for i in range(self.rows)]
-        for i,line in enumerate(self.prev_generation):
-            for j,this in enumerate(line):
-                cell=(j,i)
-                neighbours_count=sum([self.prev_generation[c[1]][c[0]] for c in self.get_neighbours(cell)])
-                if self.prev_generation[i][j] == 1:
-                    if neighbours_count in [2,3]:
-                        newgrid[i][j]=1
-                    else:
-                        newgrid[i][j]=0
-                else:
-                    if neighbours_count==3:
-                        newgrid[i][j]=1
-                    else:
-                        newgrid[i][j]=0
-        return newgrid
+    def get_next_generation(self) -> Grid:
+        new_greed = self.create_grid(False)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.curr_generation[i][j]:
+                    if sum(self.get_neighbours((i, j))) in [2, 3]:
+                        new_greed[i][j] = 1
+                elif sum(self.get_neighbours((i, j))) == 3:
+                    new_greed[i][j] = 1
+        return new_greed
+
     def step(self) -> None:
         """
         Выполнить один шаг игры.
         """
         self.prev_generation=self.curr_generation
         self.curr_generation=self.get_next_generation()
-        self.generations+=1
+        self.n_generation+=1
 
 
     @property
-    def is_max_generations_exceeded(self) -> bool:
+    def is_max_generations_exceed(self) -> bool:
         """
         Не превысило ли текущее число поколений максимально допустимое.
         """
-        is_exceeded=False
-        if self.generations>self.max_generations:
-            is_exceeded=True
+        is_exceeded=True
+        if self.n_generation>self.max_generations:
+            is_exceeded=False
         return is_exceeded
 
     @property
