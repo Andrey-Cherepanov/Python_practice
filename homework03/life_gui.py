@@ -97,11 +97,11 @@ if __name__ == "__main__":
     #cell_size=int(input('cell_size\n'))
     #speed=int(input('speed\n'))
 
-    parser = argparse.ArgumentParser(description = 'Реализация игры в жизнь в графическом интерфейсе.\n ПРОБЕЛ - пауза \n ЛКМ/ПКМ - изменить состояние клетки')
+    parser = argparse.ArgumentParser(description = 'Реализация игры \"жизнь\" в графическом интерфейсе. ПРОБЕЛ - пауза; ЛКМ/ПКМ - изменить состояние клетки')
     parser.add_argument("--cols", default = 20, type = int, help = "Количество столбцов на поле")
     parser.add_argument("--rows", default = 20, type = int, help = "Количество строчек на поле")
-    parser.add_argument("--cell_size", default = 10, type = int, help = "Размер стороны клетки")
-    parser.add_argument("--speed", default = 10, type = int, help = "Скорость протекания игры")
+    parser.add_argument("--cell_size", default = 15, type = int, help = "Размер стороны клетки")
+    parser.add_argument("--speed", default = 5, type = int, help = "Скорость протекания игры")
     parser.add_argument("--max_gens", type = int, help = "Максимальное количество поколений в игре")
 
     args = parser.parse_args()

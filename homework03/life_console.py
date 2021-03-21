@@ -34,7 +34,7 @@ class Console(UI):
             time.sleep(0.5)
         curses.endwin()
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description = 'Реализация игры в жизнь в консольном интерфейсе.')
+    parser = argparse.ArgumentParser(description = 'Реализация игры \"Жизнь\" в консольном интерфейсе.')
     parser.add_argument("--cols", default = 20, type = int, help = "Количество столбцов на поле")
     parser.add_argument("--rows", default = 20, type = int, help = "Количество строчек на поле")
     parser.add_argument("--max_gens", type = int, help = "Максимальное количество поколений в игре")
