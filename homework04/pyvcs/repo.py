@@ -32,11 +32,13 @@ def repo_find(workdir: tp.Union[str, pathlib.Path] = ".") -> pathlib.Path:
 
 def repo_create(workdir: tp.Union[str, pathlib.Path]) -> pathlib.Path:
 
+#    if repo_find(workdir): raise Exception('Already a repository')
+
     try:
         if workdir.is_file():
             raise Exception(f"{workdir} is not a directory")
     except AttributeError:
-        workdir = pathlib.Path(wordir)
+        workdir = pathlib.Path(workdir)
 
     try:
         git_dir = os.environ['GIT_DIR'] if os.environ['GIT_DIR'] else ".git"
