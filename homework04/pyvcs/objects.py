@@ -70,8 +70,8 @@ def read_tree(data: bytes) -> tp.List[tp.Tuple[int, str, str]]:
 def cat_file(obj_name: str, pretty: bool = True) -> None:
     gitdir = repo_find(pathlib.Path("."))
 
-    if len(resolve_object(obj_name, gitdir)):
-        header, content = read_object(obj_name, gitdir)
+    for obj in resolve_object(obj_name, gitdir):
+        header, content = read_object(obj, gitdir)
         print(content.decode())
 
 
