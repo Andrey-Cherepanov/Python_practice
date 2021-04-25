@@ -11,7 +11,6 @@ from pyvcs.repo import repo_find
 
 
 def hash_object(data: bytes, fmt: str, write: bool = False) -> str:
-    # PUT YOUR CODE HERE
     header = f"{fmt} {len(data)}\0"
     store = header.encode() + data
     result = hashlib.sha1(store).hexdigest()

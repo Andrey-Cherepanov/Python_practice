@@ -18,16 +18,21 @@ def repo_find(workdir: tp.Union[str, pathlib.Path] = ".") -> pathlib.Path:
         raise Exception("Not a git repository")
 
     if len(workdir.parents) == 0:
-        if not os.path.exists(workdir / git_dir):
+        if not pathlib.Path.exists(workdir / git_dir):
             raise Exception("Not a git repository")
+        return workdir.absolute() / git_dir
+    elif pathlib.Path.exists(workdir / git_dir):
         return workdir.absolute() / git_dir
     else:
         for path in workdir.parents:
-            if git_dir in str(path):
+            if git_dir in str(path) or pathlib.Path.exists(path / git_dir):
                 res_dir = path
     if not res_dir:
         raise Exception("Not a git repository")
-    return res_dir
+    if git_dir in str(res_dir):
+        return res_dir
+    else:
+        return res_dir / git_dir
 
 
 def repo_create(workdir: tp.Union[str, pathlib.Path]) -> pathlib.Path:
