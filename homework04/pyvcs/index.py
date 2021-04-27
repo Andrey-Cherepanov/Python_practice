@@ -88,7 +88,7 @@ def write_index(gitdir: pathlib.Path, entries: tp.List[GitIndexEntry]) -> None:
         f.write(el.pack())
         to_hash += el.pack()
     hash = hashlib.sha1(to_hash).hexdigest()
-    f.write(struct.pack(f">{len(result)}s", bytearray.fromhex(hash)))
+    f.write(struct.pack(f">{len(bytearray.fromhex(hash))}s", bytearray.fromhex(hash)))
     f.close()
 
 
