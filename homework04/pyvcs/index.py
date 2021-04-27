@@ -55,7 +55,6 @@ class GitIndexEntry(tp.NamedTuple):
 
 
 def read_index(gitdir: pathlib.Path) -> tp.List[GitIndexEntry]:
-    """
     index = []
 
     path_index = gitdir / "index"
@@ -66,8 +65,17 @@ def read_index(gitdir: pathlib.Path) -> tp.List[GitIndexEntry]:
     except:
         return index
 
-    """
-    ...
+    count = int.from_bytes(data[8:12], "big")
+    pointer = b"\x00\x00\x00"
+    content = data[12:-20]
+    counter = 0
+    for i in range(count):
+        name_len_start = counter + 62
+        name_len_end = content[name_len_start:].find(pointer) + name_len_start + 3
+        index.append(GitIndexEntry.unpack(content[counter:name_len_end]))
+        counter = name_len_end
+    return index
+
 
 def write_index(gitdir: pathlib.Path, entries: tp.List[GitIndexEntry]) -> None:
     # PUT YOUR CODE HERE
