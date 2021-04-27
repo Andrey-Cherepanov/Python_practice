@@ -93,8 +93,12 @@ def write_index(gitdir: pathlib.Path, entries: tp.List[GitIndexEntry]) -> None:
 
 
 def ls_files(gitdir: pathlib.Path, details: bool = False) -> None:
-    # PUT YOUR CODE HERE
-    ...
+    entries = read_index(gitdir)
+    for el in entries:
+        if not details:
+            print(el.name)
+        else:
+            print(f"{str(oct(el.mode))[2:]} {el.sha1.hex()} 0	{el.name}")
 
 
 def update_index(gitdir: pathlib.Path, paths: tp.List[pathlib.Path], write: bool = True) -> None:
