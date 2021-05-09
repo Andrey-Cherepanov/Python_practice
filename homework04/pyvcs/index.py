@@ -102,5 +102,37 @@ def ls_files(gitdir: pathlib.Path, details: bool = False) -> None:
 
 
 def update_index(gitdir: pathlib.Path, paths: tp.List[pathlib.Path], write: bool = True) -> None:
-    # PUT YOUR CODE HERE
-    ...
+    entries = []
+    for el in paths:
+        try:
+            f = el.open()
+            file_content = f.read()
+        except:
+            raise Exception("Wrong path")
+
+        sha1 = hash_object(file_content.encode(), "blob", True)
+        stat = os.stat(el)
+
+        entries.append(
+            GitIndexEntry(
+                ctime_s=int(stat.st_ctime),
+                ctime_n=0,
+                mtime_s=int(stat.st_mtime),
+                mtime_n=0,
+                dev=stat.st_dev,
+                ino=stat.st_ino,
+                mode=stat.st_mode,
+                uid=stat.st_uid,
+                gid=stat.st_gid,
+                size=stat.st_size,
+                sha1=bytes.fromhex(sha1),
+                flags=7,
+                name=str(el)
+            ))
+    entries = sorted(entries, key=lambda x: x.name)
+    if not (gitdir / "index").exists():
+        write_index(gitdir, entries)
+    else:
+        index = read_index(gitdir)
+        index += entries
+        write_index(gitdir, index)
