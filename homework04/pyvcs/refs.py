@@ -4,10 +4,13 @@ import typing as tp
 
 def update_ref(gitdir: pathlib.Path, ref: tp.Union[str, pathlib.Path], new_value: str) -> None:
     ref = pathlib.Path(ref)
-    path = gitdir / ref
-    f = path.open("w")
-    f.write(new_value)
-    f.close()
+    ref_path = gitdir / ref
+    try:
+        f = ref_path.open("w")
+        f.write(new_value)
+        f.close()
+    except:
+        raise Exception("wrong path")
 
 
 def symbolic_ref(gitdir: pathlib.Path, name: str, ref: str) -> None:
@@ -17,15 +20,17 @@ def symbolic_ref(gitdir: pathlib.Path, name: str, ref: str) -> None:
 
 def ref_resolve(gitdir: pathlib.Path, refname: str) -> str:
     if refname == "HEAD":
-        ref_dir = gitdir / refname
-        with ref_dir.open(mode="r") as f:
+        ref_path = gitdir / refname
+        with ref_path.open(mode="r") as f:
             content = f.read()
         refname = content[content.find(" ") + 1:].strip()
 
-    path = gitdir / refname
-    if path.exists() is False:
+    ref_path = gitdir / refname
+
+    if ref_path.exists() is False:
         return None
-    with path.open(mode="r") as f:
+
+    with ref_path.open(mode="r") as f:
         content = f.read()
 
     return content
@@ -48,8 +53,8 @@ def is_detached(gitdir: pathlib.Path) -> bool:
 
 def get_ref(gitdir: pathlib.Path) -> str:
     refname = "HEAD"
-    ref_dir = gitdir / refname
-    with ref_dir.open(mode="r") as f:
+    ref_path = gitdir / refname
+    with ref_path.open(mode="r") as f:
         content = f.read()
     refname = content[content.find(" ") + 1:].strip()
     return refname
