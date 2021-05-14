@@ -39,7 +39,7 @@ def commit_tree(
 ) -> str:
     if "GIT_DIR" not in os.environ:
         os.environ["GIT_DIR"] = ".git"
-    if author is None:
+    if not author:
         author = f"{os.environ['GIT_AUTHOR_NAME']} <{os.environ['GIT_AUTHOR_EMAIL']}>"
     timestamp = int(time.mktime(time.localtime()))
     utc_offset = -time.timezone

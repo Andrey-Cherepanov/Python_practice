@@ -1,7 +1,6 @@
 import os
 import pathlib
 import shutil
-import stat
 import typing as tp
 
 from pyvcs.index import read_index, update_index
@@ -21,10 +20,13 @@ def commit(gitdir: pathlib.Path, message: str, author: tp.Optional[str] = None) 
 
 def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
     head_route = gitdir / "refs" / "heads" / obj_name
+
     if head_route.exists():
         with head_route.open(mode="r") as f1:
             obj_name = f1.read()
+
     index = read_index(gitdir)
+
     for entry in index:
         if pathlib.Path(entry.name).is_file():
             if "/" in entry.name:
@@ -32,8 +34,10 @@ def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
             else:
                 os.chmod(entry.name, 0o777)
                 os.remove(entry.name)
-    object_all_path = gitdir / "objects" / obj_name[:2] / obj_name[2:]
-    with object_all_path.open(mode="rb") as f2:
+                
+    object_path = gitdir / "objects" / obj_name[:2] / obj_name[2:]
+
+    with object_path.open(mode="rb") as f2:
         commit_content = f2.read()
     tree_sha = commit_parse(commit_content).decode()
 
