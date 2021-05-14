@@ -63,23 +63,50 @@ def read_object(sha: str, gitdir: pathlib.Path) -> tp.Tuple[str, bytes]:
 
 
 def read_tree(data: bytes) -> tp.List[tp.Tuple[int, str, str]]:
-    # PUT YOUR CODE HERE
-    ...
-
+    result = []
+    while len(data) != 0:
+        mode = int(data[: data.find(b" ")].decode())
+        data = data[data.find(b" ") + 1:]
+        name = data[: data.find(b"\x00")].decode()
+        data = data[data.find(b"\x00") + 1:]
+        sha = bytes.hex(data[:20])
+        data = data[20:]
+        result.append((mode, name, sha))
+    return result
 
 def cat_file(obj_name: str, pretty: bool = True) -> None:
     gitdir = repo_find(pathlib.Path("."))
 
     for obj in resolve_object(obj_name, gitdir):
         header, content = read_object(obj, gitdir)
-        print(content.decode())
+        if header == "tree":
+            result = ""
+            tree_files = read_tree(content)
+            for f in tree_files:
+                result += str(f[0]).zfill(6) + " "
+                result += read_object(f[2], repo_find())[0] + " "
+                result += f[2] + "\t"
+                result += f[1] + "\n"
+            print(result)
+        else:
+            print(content.decode())
 
 
 def find_tree_files(tree_sha: str, gitdir: pathlib.Path) -> tp.List[tp.Tuple[str, str]]:
-    # PUT YOUR CODE HERE
-    ...
+    result = []
+    header, data = read_object(tree_sha, gitdir)
+    for f in read_tree(data):
+        if read_object(f[2], gitdir)[0] == "tree":
+            tree = find_tree_files(f[2], gitdir)
+            for blob in tree:
+                name = f[1] + "/" + blob[0]
+            result.append((name, blob[1]))
+        else:
+            result.append((f[1], f[2]))
+    return result
+
 
 
 def commit_parse(raw: bytes, start: int = 0, dct=None):
-    # PUT YOUR CODE HERE
-    ...
+    data = zlib.decompress(raw)
+    return data[data.find(b"tree") + 5: data.find(b"tree") + 45]
