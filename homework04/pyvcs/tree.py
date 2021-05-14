@@ -11,23 +11,23 @@ from pyvcs.refs import get_ref, is_detached, resolve_head, update_ref
 
 def write_tree(gitdir: pathlib.Path, index: tp.List[GitIndexEntry], dirname: str = "") -> str:
     records = b""
-    for el in index:
-        if "/" in el.name:
+    for entry in index:
+        if "/" in entry.name:
             records += b"40000 "
             subdir_files = b""
-            dir_name = el.name[: el.name.find("/")]
+            dir_name = entry.name[:entry.name.find("/")]
             records += dir_name.encode() + b"\0"
-            subdir_files += oct(el.mode)[2:].encode() + b" "
-            subdir_files += el.name[el.name.find("/") + 1:].encode() + b"\0"
-            subdir_files += el.sha1
-            blob_hash = hash_object(subdir_files, fmt="tree", write=True)
-            records += bytes.fromhex(blob_hash)
+            subdir_files += oct(entry.mode)[2:].encode() + b" "
+            subdir_files += entry.name[entry.name.find("/") + 1:].encode() + b"\0"
+            subdir_files += entry.sha1
+            sha = hash_object(subdir_files, fmt="tree", write=True)
+            records += bytes.fromhex(sha)
         else:
-            records += oct(el.mode)[2:].encode() + b" "
-            records += el.name.encode() + b"\0"
-            records += el.sha1
-    tree_name = hash_object(records, fmt="tree", write=True)
-    return tree_name
+            records += oct(entry.mode)[2:].encode() + b" "
+            records += entry.name.encode() + b"\0"
+            records += entry.sha1
+    tree = hash_object(records, fmt="tree", write=True)
+    return tree
 
 
 def commit_tree(
