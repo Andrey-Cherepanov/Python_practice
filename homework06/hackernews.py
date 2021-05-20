@@ -24,7 +24,20 @@ def add_label():
 
 @route("/update")
 def update_news():
-
+    news = get_news('https://news.ycombinator.com/newest')
+    s = session()
+    for new in news:
+        if not len(
+        s.query(News).filter(News.author == new['author'], News.title == new['title']).all()
+        ):
+            s.add(News(
+            author=new['author'],
+            title=new['title'],
+            points=new['points'],
+            comments=new['comments'],
+            url=new['url']
+            ))
+        s.commit()
     redirect("/news")
 
 @route("/classify")
