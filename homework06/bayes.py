@@ -67,11 +67,17 @@ class NaiveBayesClassifier:
             for key in self.classes:
                 keys_res[key]=math.log(self.classes_p[key]) + sum([math.log(x) for x in words_p[key] if x > 0])
 
+            with open('temp', 'w') as f:
+                for v in keys_res.values():
+                    f.write(str(v)+'\n')
+                f.write('\n')
+                for key in self.classes:
+                    f.write(key)
             max_ = keys_res[self.classes[0]]
             predict = self.classes[0]
             for key in self.classes:
                 if max_ < keys_res[key]:
-                    max_ = key
+                    max_ = keys_res[key]
                     predict = key
             predicts.append(predict)
         return predicts

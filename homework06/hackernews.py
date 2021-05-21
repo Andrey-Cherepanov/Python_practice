@@ -42,8 +42,34 @@ def update_news():
 
 @route("/classify")
 def classify_news():
-    # PUT YOUR CODE HERE
-    ...
+    s = session()
+    marked_news = s.query(News).filter(News.label != None).all()
+    marked_news = [[new.title, new.label] for new in marked_news]
+    X_train = [n[0] for n in marked_news]
+    y_train = [n[1] for n in marked_news]
+
+    model = NaiveBayesClassifier(alpha = 1)
+    model.fit(X_train, y_train)
+
+    news = s.query(News).filter(News.label == None).all()
+    news_ids = [new.id for new in news]
+    news = [new.title for new in news]
+    predicts = model.predict(news)
+
+    classified_news = {'good':[],
+    'maybe':[],
+    'never':[]}
+
+    for i,predict in enumerate(predicts):
+        classified_news[predict].append(news_ids[i])
+
+    rows=[]
+    for label in ['good', 'maybe', 'never']:
+        for id in classified_news[label]:
+            rows.append(
+            s.query(News).filter(News.id == id).first()
+            )
+    return template('news_template', rows=rows)
 
 if __name__ == "__main__":
     run(host="localhost", port=8080)
