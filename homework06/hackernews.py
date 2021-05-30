@@ -69,7 +69,7 @@ def classify_news():
             rows.append(
             s.query(News).filter(News.id == id).first()
             )
-    return template('news_template', rows=rows)
+    return template('classification_template', rows=rows)
 
 if __name__ == "__main__":
     run(host="localhost", port=8080)
