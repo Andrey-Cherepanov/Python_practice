@@ -1,15 +1,22 @@
+#Реализация графического  интрефейса
+
+#-------------------------------------------------------------------------------
+#Импорт библиотек---------------------------------------------------------------
 import pygame
 from pygame.locals import *
 import argparse
 from typing import List, Optional, Tuple
 
+#Импорт модулей-----------------------------------------------------------------
 from life import GameOfLife
 from ui import UI
+#-------------------------------------------------------------------------------
 
-
-
+#Реализация класса игры в жизнь в графическом интерфейсе-------------------------
 class GUI(UI):
+    '''Класс реализация графического интрефейса'''
 
+    #Инициализация
     def __init__(self, life: GameOfLife, cell_size: int=10, speed: int=10) -> None:
         super().__init__(life)
         self.cell_size=cell_size
@@ -84,18 +91,10 @@ class GUI(UI):
                     break
                 clock.tick(self.speed)
         pygame.quit()
+#-------------------------------------------------------------------------------
 
-
+#Непосредственный запуск игры---------------------------------------------------
 if __name__ == "__main__":
-    #cols=int(input('cols\n'))
-    #rows=int(input('rows\n'))
-    #max_gens=int(input('maximum generations or \'0\' for infinity\n'))
-    #if max_gens == 0:
-    #    life=GameOfLife(size=(rows,cols))
-    #else:
-    #    life=GameOfLife(size=(rows,cols), max_generations=max_gens)
-    #cell_size=int(input('cell_size\n'))
-    #speed=int(input('speed\n'))
 
     parser = argparse.ArgumentParser(description = 'Реализация игры \"жизнь\" в графическом интерфейсе. ПРОБЕЛ - пауза; ЛКМ/ПКМ - изменить состояние клетки')
     parser.add_argument("--cols", default = 20, type = int, help = "Количество столбцов на поле")

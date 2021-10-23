@@ -1,16 +1,21 @@
+# Класс, реализующий логику игры в жизнь
+
+# Импорт библиотек--------------------------------------------------------------
 import pathlib
 import random
 
 from typing import List, Optional, Tuple
+#-------------------------------------------------------------------------------
 
-
+# Глобальные переменные---------------------------------------------------------
 Cell = Tuple[int, int]
 Cells = List[int]
 Grid = List[Cells]
+#-------------------------------------------------------------------------------
 
-
+#-------------------------------------------------------------------------------
 class GameOfLife:
-
+    # Инициализация
     def __init__(
         self,
         size: Tuple[int, int],
@@ -95,7 +100,7 @@ class GameOfLife:
         out : Grid
             Новое поколение клеток.
         """
-    def get_next_generation(self) -> Grid:
+
         new_greed = self.create_grid(False)
         for i in range(self.rows):
             for j in range(self.cols):
